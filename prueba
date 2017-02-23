@@ -4,14 +4,35 @@ def ObtenerBaraja():
     return random.sample([(x,y)for x in ['A',1,2,3,4,5,6,7,8,9,10,'J','Q','K'] for y in ['diamantes','picas','corazones','treboles']],26)
 
 
-def jugar(mazo,mano1,mano2):
-    print ("mano1: ",mano1)
-    print ("mano2", mano2)
-    if mazo == []:
+def jugar(cartas,jugador1,jugador2):
+    print ("Jugador 1: ",jugador1)
+    print ("Jugador 2: ", jugador2)
+    if cartas == []:
         print("Juego terminano")
     else:
-        jugar(mazo[2:],mano1 + [mazo[0]], mano2 + [mazo[1]])
+        jugar(cartas[2:],jugador1 + [cartas[0]], jugador2 + [cartas[1]])
 
+def contar_mano(jugador):
+    """retorna el valor de la mano"""
+    if jugador == []:
+        return 0
+    if type(jugador[0][0]) == str:
+        if jugador[0][0] == 'A':
+            return 1 + contar_mano(jugador[1:])
+        else:
+            return 10 + contar_mano(jugador[1:])
+    else:
+        return jugador[0][0] + contar_mano(jugador[1:])
 
+def ajustar_resultado(jugador, mano):
+    """cuentas las 'A' y suma 10 de ser posible"""
+    if jugador == []:
+        return mano
 
-jugar(ObtenerBaraja(),[],[])
+    if mano < 12:
+        if jugador[0][0] == "A":
+            return ajustar_resultado(jugador[1:], mano+10)
+        else:
+            return ajustar_resultado(jugador[1:], mano)
+    return mano
+
